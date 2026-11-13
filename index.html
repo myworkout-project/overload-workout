@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Overload — Workout Tracker</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--bg:#0b1220;--panel:#131e30;--panel2:#1b2940;--text:#eef4ff;--muted:#91a1ba;--accent:#a3e635;--line:#2b3a52;--red:#fb7185}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
+.app{max-width:760px;margin:auto;padding:20px 16px 48px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.brand{font-weight:900;letter-spacing:2px;font-size:22px}.sub{font-size:11px;color:var(--muted);letter-spacing:1.5px}
+.pill{background:#25351d;color:var(--accent);border:1px solid #45642a;padding:6px 10px;border-radius:99px;font-size:11px;font-weight:800}
+h2{font-size:17px;margin:0 0 14px}h3{font-size:14px;margin:0 0 8px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
+.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
+.stat .num{font-size:30px;font-weight:850;line-height:1.2;margin:5px 0}.muted{color:var(--muted);font-size:12px}
+.card{margin-bottom:15px}.field{margin:12px 0}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+input,select{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#0d1728;color:var(--text);font:inherit;outline:none}
+input:focus,select:focus{border-color:var(--accent)}
+.exercise-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.ex{padding:12px;border:1px solid var(--line);background:#0d1728;color:var(--text);border-radius:11px;text-align:left;font-weight:700}
+.ex.active{border-color:var(--accent);background:#26351d;color:var(--accent)}
+.target{display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:13px;border-radius:12px;margin:14px 0}
+.target strong{font-size:23px;color:var(--accent)}
+button.primary{width:100%;padding:14px;border:0;border-radius:12px;background:var(--accent);color:#17220c;font-weight:900;font-size:15px}
+button.secondary{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar select{flex:1;min-width:130px}
+.log{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
+.log:last-child{border-bottom:0}.reps{font-size:21px;font-weight:850;color:var(--accent)}
+.log small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.empty{text-align:center;color:var(--muted);padding:24px 8px}
+canvas{width:100%;height:210px;display:block}
+.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{color:var(--red)}
+footer{text-align:center;color:var(--muted);font-size:11px;margin-top:25px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<main class="app">
+  <header class="top">
+    <div><div class="brand">OVERLOAD<span style="color:var(--accent)">.</span></div><div class="sub">CALISTHENICS TRACKER</div></div>
+    <span class="pill">● TRAINING LOG</span>
+  </header>
+
+  <section class="grid" id="stats"></section>
+
+  <section class="card">
+    <h2>Catat latihan</h2>
+    <div class="field"><label for="date">Tanggal latihan</label><input id="date" type="date"></div>
+    <div class="field"><label for="day">Hari latihan</label><select id="day">
+      <option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option>
+    </select></div>
+    <div class="field"><label>Jenis latihan</label><div class="exercise-grid" id="exercises"></div></div>
+    <div class="field"><label for="reps">Repetisi maksimal yang dicapai</label><input id="reps" type="number" min="1" step="1" placeholder="Contoh: 15" inputmode="numeric"></div>
+    <div class="target"><div><div class="muted">Target sesi berikutnya</div><div id="targetNote" class="muted">Catat hasil pertama untuk membuat target.</div></div><strong id="target">—</strong></div>
+    <button class="primary" id="save">SIMPAN HASIL LATIHAN</button>
+  </section>
+
+  <section class="card">
+    <h2>Grafik perkembangan</h2>
+    <div class="field"><label for="chartExercise">Pilih latihan</label><select id="chartExercise"></select></div>
+    <canvas id="chart" width="700" height="250" aria-label="Grafik progres repetisi"></canvas>
+    <div class="muted" id="chartCaption">Grafik akan muncul setelah data dicatat.</div>
+  </section>
+
+  <section class="card">
+    <h2>Riwayat latihan</h2>
+    <div class="toolbar">
+      <select id="filter"><option value="Semua">Semua latihan</option></select>
+      <button class="secondary" id="export">Ekspor CSV</button>
+    </div>
+    <div id="history"></div>
+  </section>
+  <section class="card">
+    <h2>Cadangan data</h2>
+    <div class="muted" style="margin-bottom:12px">Data tersimpan di browser perangkat ini. Ekspor cadangan secara berkala agar aman saat ganti perangkat atau menghapus data browser.</div>
+    <div class="actions"><button class="secondary" id="backup">Unduh cadangan JSON</button><label class="secondary" style="cursor:pointer">Impor cadangan<input id="restore" type="file" accept="application/json" hidden></label><button class="secondary danger" id="clear">Hapus semua data</button></div>
+  </section>
+  <footer>OVERLOAD TRACKER · Naikkan kemampuan secara bertahap dan utamakan teknik yang benar.</footer>
+</main>
+<script>
+const EXERCISES=["Push-up","Pull-up","Sit-up","Squat"];
+const KEY="overload-workout-v1";
+let logs=JSON.parse(localStorage.getItem(KEY)||"[]");
+let selected="Push-up";
+const $=id=>document.getElementById(id);
+const today=new Date();
+$("date").value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-");
+const days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+$("day").value=days[today.getDay()];
+function save(){localStorage.setItem(KEY,JSON.stringify(logs))}
+function records(name){return logs.filter(x=>x.exercise===name).sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id)}
+function best(name){return records(name).reduce((m,x)=>Math.max(m,x.reps),0)}
+function nextTarget(name){const arr=records(name);if(!arr.length)return null;return best(name)+1}
+function renderExerciseButtons(){
+ $("exercises").innerHTML=EXERCISES.map(n=>`<button class="ex ${n===selected?"active":""}" data-name="${n}">${n}</button>`).join("");
+ $("exercises").querySelectorAll("button").forEach(b=>b.onclick=()=>{selected=b.dataset.name;renderExerciseButtons();renderTarget()});
+}
+function renderStats(){
+ $("stats").innerHTML=EXERCISES.map(n=>`<div class="stat"><div class="muted">${n}</div><div class="num">${best(n)||"—"}</div><div class="muted">repetisi terbaik</div></div>`).join("");
+}
+function renderTarget(){
+ const t=nextTarget(selected);
+ $("target").textContent=t===null?"—":t+" reps";
+ $("targetNote").textContent=t===null?"Catat hasil pertama untuk membuat target.":"Rekor terbaik saat ini: "+best(selected)+" reps";
+}
+function renderHistory(){
+ const f=$("filter").value;
+ const arr=logs.filter(x=>f==="Semua"||x.exercise===f).slice().sort((a,b)=>b.date.localeCompare(a.date)||b.id-a.id);
+ $("history").innerHTML=arr.length?arr.map(x=>`<div class="log"><div><b>${x.exercise}</b><small>${x.day} · ${x.date}</small></div><div style="display:flex;align-items:center;gap:12px"><span class="reps">${x.reps}</span><button class="secondary danger" data-del="${x.id}" aria-label="Hapus catatan">×</button></div></div>`).join(""):'<div class="empty">Belum ada catatan latihan.<br>Simpan sesi pertamamu di atas.</div>';
+ $("history").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{logs=logs.filter(x=>x.id!==Number(b.dataset.del));save();render()});
+}
+function drawChart(){
+ const c=$("chart"),ctx=c.getContext("2d"),w=c.width,h=c.height;
+ ctx.clearRect(0,0,w,h);
+ const arr=records($("chartExercise").value);
+ if(!arr.length){$("chartCaption").textContent="Grafik akan muncul setelah data dicatat.";return}
+ const values=arr.map(x=>x.reps),max=Math.max(...values,5),min=0,pad=35;
+ ctx.strokeStyle="#2b3a52";ctx.lineWidth=1;
+ for(let i=0;i<5;i++){let y=pad+(h-pad*2)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(w-pad,y);ctx.stroke();ctx.fillStyle="#91a1ba";ctx.font="12px system-ui";ctx.fillText(String(Math.round(max*(1-i/4))),4,y+4)}
+ const x=i=>arr.length===1?w/2:pad+(w-pad*2)*i/(arr.length-1);
+ const y=v=>h-pad-(h-pad*2)*v/max;
+ ctx.strokeStyle="#a3e635";ctx.lineWidth=3;ctx.beginPath();
+ values.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.stroke();
+ values.forEach((v,i)=>{ctx.fillStyle="#a3e635";ctx.beginPath();ctx.arc(x(i),y(v),5,0,Math.PI*2);ctx.fill()});
+ $("chartCaption").textContent=arr.length+" sesi tercatat · Rekor: "+Math.max(...values)+" repetisi";
+}
+function render(){
+ renderStats();renderTarget();renderHistory();drawChart();
+}
+EXERCISES.forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;$("chartExercise").append(o);let f=o.cloneNode(true);$("filter").append(f)});
+renderExerciseButtons();render();
+$("save").onclick=()=>{
+ const reps=Number($("reps").value),date=$("date").value;
+ if(!Number.isInteger(reps)||reps<1){alert("Masukkan repetisi berupa bilangan bulat minimal 1.");return}
+ if(!date){alert("Pilih tanggal latihan.");return}
+ const d=new Date(date+"T12:00:00");
+ logs.push({id:Date.now()+Math.floor(Math.random()*1000),date,day:$("day").value||days[d.getDay()],exercise:selected,reps});
+ save();$("reps").value="";render();alert("Hasil latihan berhasil disimpan.");
+};
+$("filter").onchange=renderHistory;
+$("chartExercise").onchange=drawChart;
+$("export").onclick=()=>{
+ const rows=[["Tanggal","Hari","Latihan","Repetisi"],...logs.map(x=>[x.date,x.day,x.exercise,x.reps])];
+ const csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(",")).join("\n");
+ download(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),"workout-history.csv");
+};
+$("backup").onclick=()=>download(new Blob([JSON.stringify(logs,null,2)],{type:"application/json"}),"overload-backup.json");
+$("restore").onchange=async e=>{
+ try{const data=JSON.parse(await e.target.files[0].text());if(!Array.isArray(data)||data.some(x=>!EXERCISES.includes(x.exercise)||!Number.isInteger(x.reps)||!x.date))throw Error();logs=data;save();render();alert("Cadangan berhasil diimpor.");}
+ catch{alert("File cadangan tidak valid.");}e.target.value="";
+};
+$("clear").onclick=()=>{if(confirm("Yakin ingin menghapus seluruh riwayat latihan? Tindakan ini tidak bisa dibatalkan.")){logs=[];save();render()}};
+function download(blob,name){const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+if("serviceWorker" in navigator && location.protocol!=="file:"){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
+</script>
+</body></html>
