@@ -2,82 +2,162 @@
 <html lang="id">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1220">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#080e1b">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon-192.png" type="image/png">
-<title>OVERLOAD — Workout Tracker</title>
+<title>OVERLOAD — Calisthenics System</title>
 <style>
-:root{--bg:#0b1220;--panel:#131e30;--panel2:#1b2940;--text:#eef4ff;--muted:#91a1ba;--accent:#a3e635;--line:#2b3a52;--red:#fb7185}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px system-ui,-apple-system,Segoe UI,sans-serif}
-.app{max-width:760px;margin:auto;padding:20px 16px 48px}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
-.brand{font-weight:900;letter-spacing:2px;font-size:22px}.sub{font-size:11px;color:var(--muted);letter-spacing:1.5px}
-.pill{background:#25351d;color:var(--accent);border:1px solid #45642a;padding:6px 10px;border-radius:99px;font-size:11px;font-weight:800}
-h2{font-size:17px;margin:0 0 14px}h3{font-size:14px;margin:0 0 8px;color:var(--muted)}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:24px}
-.stat,.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px}
-.stat .num{font-size:30px;font-weight:850;line-height:1.2;margin:5px 0}.muted{color:var(--muted);font-size:12px}
-.card{margin-bottom:15px}.field{margin:12px 0}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-input,select{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:11px;background:#0d1728;color:var(--text);font:inherit;outline:none}
-input:focus,select:focus{border-color:var(--accent)}
-.exercise-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.ex{padding:12px;border:1px solid var(--line);background:#0d1728;color:var(--text);border-radius:11px;text-align:left;font-weight:700}
-.ex.active{border-color:var(--accent);background:#26351d;color:var(--accent)}
-.target{display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:13px;border-radius:12px;margin:14px 0}
-.target strong{font-size:23px;color:var(--accent)}
-button.primary{width:100%;padding:14px;border:0;border-radius:12px;background:var(--accent);color:#17220c;font-weight:900;font-size:15px}
-button.secondary{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar select{flex:1;min-width:130px}
-.log{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}
-.log:last-child{border-bottom:0}.reps{font-size:21px;font-weight:850;color:var(--accent)}
-.log small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
-.empty{text-align:center;color:var(--muted);padding:24px 8px}
-canvas{width:100%;height:210px;display:block}
-.actions{display:flex;gap:8px;flex-wrap:wrap}.danger{color:var(--red)}
-footer{text-align:center;color:var(--muted);font-size:11px;margin-top:25px}
-@media(min-width:600px){.grid{grid-template-columns:repeat(4,1fr)}}
+:root{--bg:#080e1b;--panel:#101a2b;--panel2:#17243a;--line:#263751;--text:#eef4ff;--muted:#91a3bd;--lime:#a3e635;--cyan:#56d9ff;--red:#ff718b;--shadow:0 18px 45px #0005}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#1b3450 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+button,input,select{font:inherit}button{cursor:pointer}.app{max-width:850px;margin:auto;padding:20px 15px calc(42px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}.brand{font-size:24px;font-weight:950;letter-spacing:2.4px}.brand span{color:var(--lime)}.sub{font-size:10px;letter-spacing:2px;color:var(--muted)}.status{border:1px solid #47652a;background:#1b2b18;color:var(--lime);padding:6px 10px;border-radius:30px;font-size:10px;font-weight:850;letter-spacing:1px}
+.nav{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}.nav button{background:#101a2b;border:1px solid var(--line);color:var(--muted);padding:11px 8px;border-radius:12px;font-weight:800}.nav button.active{color:var(--lime);border-color:#83bd2c;background:#1b2b18}
+h1{font-size:21px;margin:0 0 5px}h2{font-size:17px;margin:0 0 13px}h3{font-size:13px;margin:0 0 8px;color:var(--muted)}.muted{color:var(--muted);font-size:12px}.panel{background:linear-gradient(145deg,#142238,#0e1828);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:var(--shadow)}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin:15px 0}.stat{padding:13px;background:#101a2b;border:1px solid var(--line);border-radius:14px}.stat strong{display:block;font-size:27px;line-height:1.2;margin:4px 0;color:var(--lime)}.stat span{font-size:11px;color:var(--muted)}
+.field{margin:11px 0}.field label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}input,select{width:100%;padding:12px;border-radius:11px;border:1px solid var(--line);background:#091322;color:var(--text);outline:none}input:focus,select:focus{border-color:var(--lime)}.two{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{border:1px solid var(--line);background:#1a2940;color:var(--text);border-radius:12px;padding:12px 14px;font-weight:850}.btn.primary{background:var(--lime);color:#14200b;border-color:var(--lime)}.btn.cyan{background:#123448;border-color:#21617a;color:var(--cyan)}.btn.danger{color:var(--red)}.btn:disabled{opacity:.4;cursor:not-allowed}.wide{width:100%}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions>*{flex:1}
+.view{display:none}.view.active{display:block}
+.hero{position:relative;overflow:hidden;border-color:#47652a;background:radial-gradient(circle at 85% 10%,#35551e77,transparent 38%),linear-gradient(145deg,#182b25,#101a2b)}.eyebrow{color:var(--lime);font-size:10px;font-weight:900;letter-spacing:2px}.timer{font-size:clamp(55px,15vw,88px);font-weight:950;letter-spacing:-4px;line-height:1.1;text-align:center;font-variant-numeric:tabular-nums;margin:16px 0 4px}.timer.done{color:var(--lime)}.timer-label{text-align:center;color:var(--muted);font-size:11px;letter-spacing:2px}.round-count{text-align:center;font-size:18px;font-weight:850;margin:12px 0}.round-count strong{font-size:46px;color:var(--lime);display:block;line-height:1.1}.round-tap{width:100%;min-height:82px;border:0;border-radius:16px;background:linear-gradient(135deg,#b7f34e,#80c92a);color:#15220b;font-size:19px;font-weight:950;box-shadow:0 8px 25px #8bcf3530}.round-tap small{display:block;font-size:11px;font-weight:750;opacity:.75;margin-top:3px}.round-tap:active{transform:scale(.985)}.exercise-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}.exercise{background:#0a1423;border:1px solid var(--line);border-radius:12px;text-align:center;padding:12px 5px}.exercise b{display:block;font-size:23px;color:var(--cyan)}.exercise span{font-size:11px;color:var(--muted)}.progress{height:7px;background:#26364d;border-radius:10px;overflow:hidden;margin:12px 0}.progress i{display:block;height:100%;width:0;background:var(--lime);transition:width .2s}
+.log{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.log:last-child{border:0}.log b{display:block}.log small{color:var(--muted);font-size:11px}.number{color:var(--lime);font-size:21px;font-weight:900}.empty{text-align:center;color:var(--muted);padding:22px 5px}
+.chart-wrap{height:190px}canvas{width:100%;height:190px;display:block}.tag{display:inline-block;border:1px solid #46642b;color:var(--lime);border-radius:30px;padding:4px 9px;font-size:10px;font-weight:850}
+footer{text-align:center;color:#657792;font-size:10px;margin:24px 0 5px}
+@media(min-width:620px){.stats{grid-template-columns:repeat(4,1fr)}.app{padding-top:28px}.panel{padding:19px}}
 </style>
 </head>
 <body>
 <main class="app">
-<header class="top"><div><div class="brand">OVERLOAD<span style="color:var(--accent)">.</span></div><div class="sub">CALISTHENICS TRACKER</div></div><span class="pill">● TRAINING LOG</span></header>
-<section class="grid" id="stats"></section>
-<section class="card">
-<h2>Catat latihan</h2>
-<div class="field"><label for="date">Tanggal latihan</label><input id="date" type="date"></div>
-<div class="field"><label for="day">Hari latihan</label><select id="day"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option></select></div>
-<div class="field"><label>Jenis latihan</label><div class="exercise-grid" id="exercises"></div></div>
-<div class="field"><label for="reps">Repetisi maksimal yang dicapai</label><input id="reps" type="number" min="1" step="1" placeholder="Contoh: 15" inputmode="numeric"></div>
-<div class="target"><div><div class="muted">Target sesi berikutnya</div><div id="targetNote" class="muted">Catat hasil pertama untuk membuat target.</div></div><strong id="target">—</strong></div>
-<button class="primary" id="save">SIMPAN HASIL LATIHAN</button>
+<header><div><div class="brand">OVERLOAD<span>.</span></div><div class="sub">CALISTHENICS PERFORMANCE SYSTEM</div></div><span class="status">● SYSTEM READY</span></header>
+<nav class="nav">
+<button class="active" data-view="home">DASHBOARD</button><button data-view="cindy">CINDY WOD</button><button data-view="history">RIWAYAT</button>
+</nav>
+
+<section id="home" class="view active">
+<div><div class="eyebrow">PERFORMANCE OVERVIEW</div><h1>Bangun kekuatan. Ukur progres.</h1><div class="muted">Semua catatan latihanmu dalam satu tempat.</div></div>
+<div class="stats" id="stats"></div>
+<section class="panel">
+<h2>Catat latihan reguler</h2>
+<div class="field"><label for="date">Tanggal</label><input id="date" type="date"></div>
+<div class="two"><div class="field"><label for="day">Hari</label><select id="day"><option>Senin</option><option>Selasa</option><option>Rabu</option><option>Kamis</option><option>Jumat</option><option>Sabtu</option><option>Minggu</option></select></div><div class="field"><label for="exercise">Gerakan</label><select id="exercise"><option>Push-up</option><option>Pull-up</option><option>Sit-up</option><option>Squat</option><option>Dips</option><option>Chin-up</option></select></div></div>
+<div class="field"><label for="reps">Repetisi maksimal yang dicapai</label><input id="reps" type="number" min="1" step="1" inputmode="numeric" placeholder="Contoh: 15"></div>
+<div class="two"><div class="stat"><span>REKOR GERAKAN</span><strong id="best">—</strong></div><div class="stat"><span>TARGET BERIKUTNYA</span><strong id="target">—</strong></div></div>
+<button class="btn primary wide" id="saveRegular">SIMPAN HASIL LATIHAN</button>
 </section>
-<section class="card"><h2>Grafik perkembangan</h2><div class="field"><label for="chartExercise">Pilih latihan</label><select id="chartExercise"></select></div><canvas id="chart" width="700" height="250"></canvas><div class="muted" id="chartCaption">Grafik akan muncul setelah data dicatat.</div></section>
-<section class="card"><h2>Riwayat latihan</h2><div class="toolbar"><select id="filter"><option value="Semua">Semua latihan</option></select><button class="secondary" id="export">Ekspor CSV</button></div><div id="history"></div></section>
-<section class="card"><h2>Cadangan data</h2><div class="muted" style="margin-bottom:12px">Data tersimpan di browser perangkat ini. Ekspor cadangan berkala agar aman saat ganti perangkat atau menghapus data browser.</div><div class="actions"><button class="secondary" id="backup">Unduh cadangan JSON</button><label class="secondary" style="cursor:pointer">Impor cadangan<input id="restore" type="file" accept="application/json" hidden></label><button class="secondary danger" id="clear">Hapus semua data</button></div></section>
-<footer>OVERLOAD TRACKER · Naikkan kemampuan bertahap dan utamakan teknik yang benar.</footer>
+<section class="panel"><h2>Grafik perkembangan</h2><div class="field"><label for="chartExercise">Pilih gerakan</label><select id="chartExercise"></select></div><div class="chart-wrap"><canvas id="chart" width="700" height="220"></canvas></div><div class="muted" id="chartCaption">Grafik muncul setelah data dicatat.</div></section>
+<section class="panel"><h2>Cadangan data</h2><p class="muted">Ekspor backup secara berkala agar data aman saat pindah perangkat.</p><div class="actions"><button class="btn" id="backup">Backup JSON</button><label class="btn" style="text-align:center;cursor:pointer">Impor JSON<input id="restore" type="file" accept="application/json" hidden></label></div></section>
+</section>
+
+<section id="cindy" class="view">
+<div class="panel hero">
+<div class="eyebrow">BENCHMARK WORKOUT / AMRAP</div><h1>CINDY WORKOUT</h1><div class="muted">As many rounds as possible dalam batas waktu.</div>
+<div class="timer" id="timer">20:00</div><div class="timer-label" id="timerLabel">SIAP MEMULAI</div>
+<div class="progress"><i id="timeProgress"></i></div>
+<div class="round-count">ROUNDS COMPLETED<strong id="rounds">0</strong></div>
+<button class="round-tap" id="addRound" disabled>TAP — SELESAI 1 RONDE<small>1 KLIK = +1 RONDE</small></button>
+<div class="actions" style="margin-top:10px"><button class="btn primary" id="startTimer">MULAI</button><button class="btn" id="pauseTimer" disabled>JEDA</button><button class="btn danger" id="resetTimer">RESET</button></div>
+</div>
+<section class="panel"><h2>Gerakan per ronde</h2><div class="exercise-list"><div class="exercise"><b id="showPull">5</b><span>PULL-UP</span></div><div class="exercise"><b id="showPush">10</b><span>PUSH-UP</span></div><div class="exercise"><b id="showSquat">15</b><span>SQUAT</span></div></div><div class="muted">Selesaikan ketiga gerakan di atas, lalu tekan tombol +1 ronde. Tekan hanya setelah satu ronde lengkap.</div></section>
+<section class="panel"><h2>Pengaturan Cindy</h2><div class="two"><div class="field"><label for="duration">Durasi (menit)</label><input id="duration" type="number" min="1" max="180" value="20"></div><div class="field"><label for="pullReps">Pull-up / ronde</label><input id="pullReps" type="number" min="0" max="500" value="5"></div><div class="field"><label for="pushReps">Push-up / ronde</label><input id="pushReps" type="number" min="0" max="500" value="10"></div><div class="field"><label for="squatReps">Squat / ronde</label><input id="squatReps" type="number" min="0" max="500" value="15"></div></div><button class="btn cyan wide" id="applySettings">TERAPKAN PENGATURAN</button><p class="muted">Pengaturan hanya bisa diubah saat timer tidak berjalan. Default: 20 menit, 5 pull-up, 10 push-up, 15 squat.</p></section>
+<section class="panel"><h2>Hasil sesi terakhir</h2><div id="lastCindy" class="muted">Belum ada sesi Cindy yang disimpan.</div></section>
+</section>
+
+<section id="history" class="view">
+<div class="eyebrow">TRAINING DATABASE</div><h1>Riwayat latihan</h1><p class="muted">Catatan latihan reguler dan hasil Cindy Workout.</p>
+<section class="panel"><h2>Riwayat Cindy</h2><div id="cindyHistory"></div></section>
+<section class="panel"><h2>Riwayat latihan reguler</h2><div class="field"><label for="filter">Filter gerakan</label><select id="filter"><option value="Semua">Semua gerakan</option></select></div><div id="regularHistory"></div></section>
+</section>
+<footer>OVERLOAD // TRAIN SMARTER · PROGRESS STRONGER</footer>
 </main>
+
 <script>
-const EXERCISES=["Push-up","Pull-up","Sit-up","Squat"],KEY="overload-workout-v1";
-let logs=[];try{logs=JSON.parse(localStorage.getItem(KEY)||"[]");if(!Array.isArray(logs))logs=[]}catch(e){logs=[]}
-let selected="Push-up";const $=id=>document.getElementById(id),today=new Date(),days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-$("date").value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-");$("day").value=days[today.getDay()];
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(logs))}catch(e){alert("Penyimpanan browser penuh atau tidak tersedia.")}}
-function records(n){return logs.filter(x=>x.exercise===n).sort((a,b)=>a.date.localeCompare(b.date)||a.id-b.id)}
-function best(n){return records(n).reduce((m,x)=>Math.max(m,x.reps),0)}
-function renderButtons(){$("exercises").innerHTML=EXERCISES.map(n=>`<button class="ex ${n===selected?"active":""}" data-name="${n}">${n}</button>`).join("");$("exercises").querySelectorAll("button").forEach(b=>b.onclick=()=>{selected=b.dataset.name;renderButtons();renderTarget()})}
-function renderTarget(){let a=records(selected),t=a.length?best(selected)+1:null;$("target").textContent=t===null?"—":t+" reps";$("targetNote").textContent=t===null?"Catat hasil pertama untuk membuat target.":"Rekor terbaik saat ini: "+best(selected)+" reps"}
-function renderStats(){$("stats").innerHTML=EXERCISES.map(n=>`<div class="stat"><div class="muted">${n}</div><div class="num">${best(n)||"—"}</div><div class="muted">repetisi terbaik</div></div>`).join("")}
-function renderHistory(){let f=$("filter").value,a=logs.filter(x=>f==="Semua"||x.exercise===f).slice().sort((x,y)=>y.date.localeCompare(x.date)||y.id-x.id);$("history").innerHTML=a.length?a.map(x=>`<div class="log"><div><b>${x.exercise}</b><small>${x.day} · ${x.date}</small></div><div style="display:flex;align-items:center;gap:12px"><span class="reps">${x.reps}</span><button class="secondary danger" data-del="${x.id}">×</button></div></div>`).join(""):'<div class="empty">Belum ada catatan latihan.<br>Simpan sesi pertamamu di atas.</div>';$("history").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{logs=logs.filter(x=>x.id!==Number(b.dataset.del));persist();render()})}
-function drawChart(){let c=$("chart"),ctx=c.getContext("2d"),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);let a=records($("chartExercise").value);if(!a.length){$("chartCaption").textContent="Grafik akan muncul setelah data dicatat.";return}let vals=a.map(x=>x.reps),max=Math.max(...vals,5),pad=35,x=i=>a.length===1?w/2:pad+(w-pad*2)*i/(a.length-1),y=v=>h-pad-(h-pad*2)*v/max;ctx.strokeStyle="#2b3a52";for(let i=0;i<5;i++){let yy=pad+(h-pad*2)*i/4;ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(w-pad,yy);ctx.stroke();ctx.fillStyle="#91a1ba";ctx.font="12px system-ui";ctx.fillText(String(Math.round(max*(1-i/4))),4,yy+4)}ctx.strokeStyle="#a3e635";ctx.lineWidth=3;ctx.beginPath();vals.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.stroke();vals.forEach((v,i)=>{ctx.fillStyle="#a3e635";ctx.beginPath();ctx.arc(x(i),y(v),5,0,Math.PI*2);ctx.fill()});$("chartCaption").textContent=a.length+" sesi tercatat · Rekor: "+Math.max(...vals)+" repetisi"}
-function render(){renderStats();renderTarget();renderHistory();drawChart()}
-EXERCISES.forEach(n=>{let o=document.createElement("option");o.value=n;o.textContent=n;$("chartExercise").append(o);$("filter").append(o.cloneNode(true))});
-renderButtons();render();$("save").onclick=()=>{let r=Number($("reps").value),date=$("date").value;if(!Number.isInteger(r)||r<1){alert("Masukkan repetisi bilangan bulat minimal 1.");return}if(!date){alert("Pilih tanggal latihan.");return}logs.push({id:Date.now()+Math.floor(Math.random()*1000),date,day:$("day").value,exercise:selected,reps:r});persist();$("reps").value="";render();alert("Hasil latihan berhasil disimpan.")};
-$("filter").onchange=renderHistory;$("chartExercise").onchange=drawChart;
+const REGULAR_KEY="overload-workout-v1",CINDY_KEY="overload-cindy-v1";
+const $=id=>document.getElementById(id);
+const EXERCISES=["Push-up","Pull-up","Sit-up","Squat","Dips","Chin-up"];
+let logs=[],cindyLogs=[],selectedView="home";
+try{logs=JSON.parse(localStorage.getItem(REGULAR_KEY)||"[]");if(!Array.isArray(logs))logs=[]}catch(e){logs=[]}
+try{cindyLogs=JSON.parse(localStorage.getItem(CINDY_KEY)||"[]");if(!Array.isArray(cindyLogs))cindyLogs=[]}catch(e){cindyLogs=[]}
+function persist(){try{localStorage.setItem(REGULAR_KEY,JSON.stringify(logs));localStorage.setItem(CINDY_KEY,JSON.stringify(cindyLogs))}catch(e){alert("Penyimpanan perangkat penuh atau tidak tersedia.")}}
+const today=new Date(),days=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+$("date").value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,"0"),String(today.getDate()).padStart(2,"0")].join("-");
+$("day").value=days[today.getDay()];
+function best(name){return logs.filter(x=>x.exercise===name).reduce((m,x)=>Math.max(m,Number(x.reps)||0),0)}
+function renderStats(){
+ const total=logs.length+cindyLogs.length,regularBest=Math.max(0,...logs.map(x=>Number(x.reps)||0)),bestCindy=Math.max(0,...cindyLogs.map(x=>Number(x.rounds)||0));
+ const data=[["TOTAL SESI",total],["TOTAL REP REGULER",logs.reduce((s,x)=>s+(Number(x.reps)||0),0)],["REKOR REP",regularBest||"—"],["CINDY BEST",bestCindy?bestCindy+" ronde":"—"]];
+ $("stats").innerHTML=data.map(x=>`<div class="stat"><span>${x[0]}</span><strong>${x[1]}</strong></div>`).join("");
+}
+function renderRegular(){
+ let name=$("exercise").value;$("best").textContent=best(name)||"—";$("target").textContent=best(name)?best(name)+1:"—";
+ let f=$("filter").value,a=logs.filter(x=>f==="Semua"||x.exercise===f).slice().sort((x,y)=>y.date.localeCompare(x.date));
+ $("regularHistory").innerHTML=a.length?a.map(x=>`<div class="log"><div><b>${safe(x.exercise)}</b><small>${safe(x.day)} · ${safe(x.date)}</small></div><div><span class="number">${x.reps}</span> <button class="btn danger" data-del="${x.id}">×</button></div></div>`).join(""):'<div class="empty">Belum ada catatan latihan.</div>';
+ $("regularHistory").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>{if(confirm("Hapus catatan ini?")){logs=logs.filter(x=>String(x.id)!==b.dataset.del);persist();renderAll()}});
+}
+function safe(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function drawChart(){
+ let c=$("chart"),ctx=c.getContext("2d"),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);
+ let a=logs.filter(x=>x.exercise===$("chartExercise").value).slice().sort((x,y)=>x.date.localeCompare(y.date));
+ if(!a.length){$("chartCaption").textContent="Grafik muncul setelah data dicatat.";return}
+ let vals=a.map(x=>Number(x.reps)||0),max=Math.max(...vals,5),pad=34,x=i=>a.length===1?w/2:pad+(w-pad*2)*i/(a.length-1),y=v=>h-pad-(h-pad*2)*v/max;
+ ctx.strokeStyle="#263751";ctx.fillStyle="#91a3bd";ctx.font="12px system-ui";
+ for(let i=0;i<5;i++){let yy=pad+(h-pad*2)*i/4;ctx.beginPath();ctx.moveTo(pad,yy);ctx.lineTo(w-pad,yy);ctx.stroke();ctx.fillText(String(Math.round(max*(1-i/4))),4,yy+4)}
+ ctx.strokeStyle="#a3e635";ctx.lineWidth=3;ctx.beginPath();vals.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.stroke();
+ vals.forEach((v,i)=>{ctx.fillStyle="#a3e635";ctx.beginPath();ctx.arc(x(i),y(v),5,0,Math.PI*2);ctx.fill()});
+ $("chartCaption").textContent=a.length+" sesi · Rekor "+Math.max(...vals)+" repetisi";
+}
+function renderCindyHistory(){
+ $("cindyHistory").innerHTML=cindyLogs.length?cindyLogs.slice().reverse().map(x=>`<div class="log"><div><b>Cindy Workout</b><small>${safe(x.date)} · ${x.duration} menit · ${x.rounds} ronde</small></div><span class="number">${x.rounds} R</span></div>`).join(""):'<div class="empty">Belum ada hasil Cindy.</div>';
+ let last=cindyLogs[cindyLogs.length-1];$("lastCindy").textContent=last?`${last.date} · ${last.rounds} ronde · ${last.duration} menit`:"Belum ada sesi Cindy yang disimpan.";
+}
+function renderAll(){renderStats();renderRegular();drawChart();renderCindyHistory()}
+$("saveRegular").onclick=()=>{let r=Number($("reps").value),date=$("date").value;if(!Number.isInteger(r)||r<1){alert("Masukkan repetisi bilangan bulat minimal 1.");return}if(!date){alert("Pilih tanggal.");return}logs.push({id:Date.now(),date,day:$("day").value,exercise:$("exercise").value,reps:r});$("reps").value="";persist();renderAll();alert("Hasil latihan tersimpan.")};
+$("exercise").onchange=renderRegular;$("filter").onchange=renderRegular;$("chartExercise").onchange=drawChart;
+EXERCISES.forEach(n=>{for(const id of ["exercise","chartExercise","filter"]){let o=document.createElement("option");o.value=n;o.textContent=n;$(id).append(o)}});
+$("filter").value="Semua";renderAll();
+
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x===b));document.querySelectorAll(".view").forEach(v=>v.classList.toggle("active",v.id===b.dataset.view));selectedView=b.dataset.view});
+
+let duration=20,pull=5,push=10,squat=15,remaining=1200,rounds=0,running=false,finished=false,interval=null,startedAt=0;
+function fmt(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+function showTimer(){
+ $("timer").textContent=fmt(remaining);$("timer").classList.toggle("done",remaining===0);
+ $("timeProgress").style.width=((duration*60-remaining)/(duration*60)*100)+"%";
+ $("rounds").textContent=rounds;
+ $("timerLabel").textContent=finished?"WAKTU HABIS":running?"WORKOUT BERLANGSUNG":remaining===duration*60?"SIAP MEMULAI":"DIJEDA";
+ $("addRound").disabled=!running;$("startTimer").disabled=running||finished;$("pauseTimer").disabled=!running;
+}
+function stopClock(){if(interval){clearInterval(interval);interval=null}running=false}
+function finishWorkout(){
+ stopClock();remaining=0;finished=true;showTimer();
+ $("timerLabel").textContent="WAKTU HABIS — MASUKKAN HASIL";
+ const answer=prompt("Cindy Workout selesai! Berapa ronde yang berhasil kamu capai?",String(rounds));
+ if(answer!==null){let n=Number(answer);if(Number.isInteger(n)&&n>=0){rounds=n;saveCindyResult()}else{alert("Hasil tidak valid. Kamu bisa menyimpan hasil melalui tombol Simpan Hasil di bawah.");showFinishSave()}}
+ else showFinishSave();
+ showTimer();
+}
+function showFinishSave(){
+ if(!$("finishSave")){let b=document.createElement("button");b.id="finishSave";b.className="btn primary wide";b.textContent="SIMPAN HASIL SESI";b.style.marginTop="10px";$("resetTimer").parentNode.after(b);b.onclick=()=>{let n=prompt("Masukkan jumlah ronde yang dicapai:",String(rounds));if(n!==null&&Number.isInteger(Number(n))&&Number(n)>=0){rounds=Number(n);saveCindyResult()}}}
+}
+function saveCindyResult(){
+ cindyLogs.push({id:Date.now(),date:new Date().toISOString().slice(0,10),duration,rounds,pull,push,squat});
+ persist();renderAll();alert("Hasil Cindy Workout berhasil disimpan.");
+ let b=$("finishSave");if(b)b.remove();
+}
+function tick(){if(!running)return;remaining=Math.max(0,Math.ceil((startedAt-Date.now())/1000));showTimer();if(remaining<=0)finishWorkout()}
+$("startTimer").onclick=()=>{if(finished)return;if(remaining<=0)remaining=duration*60;running=true;startedAt=Date.now()+remaining*1000;interval=setInterval(tick,200);showTimer()};
+$("pauseTimer").onclick=()=>{if(!running)return;remaining=Math.max(0,Math.ceil((startedAt-Date.now())/1000));stopClock();showTimer()};
+$("resetTimer").onclick=()=>{if(!confirm("Reset sesi Cindy saat ini? Hasil yang belum disimpan akan hilang."))return;stopClock();duration=Number($("duration").value)||20;remaining=duration*60;rounds=0;finished=false;let b=$("finishSave");if(b)b.remove();showTimer()};
+$("addRound").onclick=()=>{if(running){rounds++;$("rounds").textContent=rounds}};
+$("applySettings").onclick=()=>{
+ if(running){alert("Jeda timer sebelum mengubah pengaturan.");return}
+ let d=Number($("duration").value),p1=Number($("pullReps").value),p2=Number($("pushReps").value),p3=Number($("squatReps").value);
+ if(!Number.isInteger(d)||d<1||d>180||![p1,p2,p3].every(x=>Number.isInteger(x)&&x>=0&&x<=500)){alert("Periksa pengaturan. Durasi 1–180 menit dan repetisi 0–500.");return}
+ duration=d;pull=p1;push=p2;squat=p3;remaining=duration*60;rounds=0;finished=false;
+ $("showPull").textContent=pull;$("showPush").textContent=push;$("showSquat").textContent=squat;
+ let b=$("finishSave");if(b)b.remove();showTimer();alert("Pengaturan Cindy diterapkan.");
+};
+showTimer();
+$("backup").onclick=()=>{let data={regular:logs,cindy:cindyLogs};download(new Blob([JSON.stringify(data,null,2)],{type:"application/json"}),"overload-backup.json")};
 function download(blob,name){let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-$("export").onclick=()=>{let rows=[["Tanggal","Hari","Latihan","Repetisi"],...logs.map(x=>[x.date,x.day,x.exercise,x.reps])],csv=rows.map(r=>r.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(",")).join("\n");download(new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8"}),"workout-history.csv")};
-$("backup").onclick=()=>download(new Blob([JSON.stringify(logs,null,2)],{type:"application/json"}),"overload-backup.json");
-$("restore").onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(!Array.isArray(d)||d.some(x=>!EXERCISES.includes(x.exercise)||!Number.isInteger(x.reps)||!x.date))throw Error();logs=d;persist();render();alert("Cadangan berhasil diimpor.")}catch(err){alert("File cadangan tidak valid.")}e.target.value=""};
-$("clear").onclick=()=>{if(confirm("Hapus seluruh riwayat latihan?")){logs=[];persist();render()}};
+$("restore").onchange=async e=>{try{let d=JSON.parse(await e.target.files[0].text());if(Array.isArray(d)){logs=d;cindyLogs=[]}else if(d&&Array.isArray(d.regular)&&Array.isArray(d.cindy)){logs=d.regular;cindyLogs=d.cindy}else throw Error();persist();renderAll();alert("Backup berhasil diimpor.")}catch(err){alert("File backup tidak valid.")}e.target.value=""};
 if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error))}
 </script>
-</body></html>
+</body>
+</html>
