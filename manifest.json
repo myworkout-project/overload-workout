@@ -1,9 +1,32 @@
 {
-  "name": "Overload Workout Tracker",
-  "short_name": "Overload",
+  "id": "./",
+  "name": "OVERLOAD Workout Tracker",
+  "short_name": "OVERLOAD",
+  "description": "Progressive overload tracker untuk push-up, pull-up, sit-up, dan squat.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#0b1220",
-  "theme_color": "#101827",
-  "description": "Pencatat progresif overload untuk calisthenics"
+  "theme_color": "#0b1220",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }
